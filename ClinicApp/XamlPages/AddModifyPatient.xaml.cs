@@ -108,7 +108,8 @@ namespace ClinicApp.XamlPages
                             PhoneNumber = phone.ToString(),
                             DateOfBirth = dateOfBirth.GetValueOrDefault(),
                             Address = address,
-                            Gender = gender
+                            Gender = gender,
+                            Age = CalculateAge(dateOfBirth.GetValueOrDefault())
                         };
                         var sucess = repository.AddPatientCard(patientCard);
                         if (await sucess)
@@ -128,6 +129,7 @@ namespace ClinicApp.XamlPages
                         m_cardToModify.DateOfBirth = dateOfBirth.GetValueOrDefault();
                         m_cardToModify.Address = address;
                         m_cardToModify.Gender = gender;
+                        m_cardToModify.Age = CalculateAge(dateOfBirth.GetValueOrDefault());
                         repository.ModifyPatientCard(m_cardToModify);
                         mainFrame.GoBack();
                     }
@@ -175,6 +177,14 @@ namespace ClinicApp.XamlPages
             datePickerBirth.SelectedDate = cardToModify.DateOfBirth;
             txtBoxAddress.Text = cardToModify.Address;
             comboBlockGender.SelectedIndex = (Int32)cardToModify.Gender;
+        }
+
+        private int CalculateAge(DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (dateOfBirth > DateTime.Now.AddYears(-age))
+                age--;
+            return age;
         }
     }
 }
